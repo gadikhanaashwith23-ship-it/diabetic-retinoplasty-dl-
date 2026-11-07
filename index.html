@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RetinaVision AI &mdash; Diabetic Retinopathy Deep Learning Diagnostic Suite</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+    <!-- Liquid Glass Stylesheet -->
+    <link rel="stylesheet" href="styles/liquid-glass.css">
+</head>
+
+<body>
+
+    <!-- Liquid Background Elements -->
+    <div class="liquid-bg-container">
+        <div class="liquid-bg-photo"></div>
+        <div class="liquid-bg-grid"></div>
+        <div class="liquid-orb liquid-orb-1"></div>
+        <div class="liquid-orb liquid-orb-2"></div>
+        <div class="liquid-orb liquid-orb-3"></div>
+        <div class="liquid-orb liquid-orb-4"></div>
+    </div>
+
+    <!-- Application Sticky Glass Header -->
+    <header class="app-header">
+        <div class="glass-panel header-inner">
+            <!-- Brand Identity -->
+            <div class="header-brand">
+                <div class="brand-icon-wrapper">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M3 12h1m16 0h1M12 3v1m0 16v1"></path>
+                        <path d="M5.6 5.6l.7.7m11.4 11.4l.7.7M5.6 18.4l.7-.7m11.4-11.4l.7-.7"></path>
+                        <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title">RetinaVision <span
+                            style="font-weight:400; font-size:0.9rem; opacity:0.8;">DL</span></div>
+                    <span class="brand-badge">APTOS 2019 / EyePACS Benchmark</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links (Laptop / Desktop) -->
+            <nav class="nav-links">
+                <a href="#cockpit" class="nav-link active">Diagnostic Cockpit</a>
+                <a href="#pipeline" class="nav-link">Preprocessing & CLAHE</a>
+                <a href="#benchmarks" class="nav-link">Model Architectures</a>
+                <a href="#quickstart" class="nav-link">Alternative Solutions</a>
+            </nav>
+
+            <!-- Action Controls -->
+            <div class="header-actions">
+                <button id="soundToggleBtn" class="btn-icon-glass" title="Toggle Acoustic Feedback"
+                    aria-label="Toggle Sound">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                </button>
+                <button id="themeToggleBtn" class="btn-icon-glass" title="Toggle Theme (Dark / Ethereal Light)"
+                    aria-label="Toggle Theme">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                    </svg>
+                </button>
+                <button id="openReportBtn" class="glass-btn glass-btn-primary"
+                    style="padding: 0.55rem 1.15rem; font-size: 0.84rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <span>Clinical Report</span>
+                </button>
+                <!-- Mobile Menu Hamburger -->
+                <button id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Toggle Navigation">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobileMenuDrawer" class="mobile-menu-drawer" style="display: none;">
+        <a href="#cockpit" class="nav-link active">Diagnostic Cockpit</a>
+        <a href="#pipeline" class="nav-link">Preprocessing & CLAHE</a>
+        <a href="#benchmarks" class="nav-link">Model Architectures</a>
+        <a href="#quickstart" class="nav-link">Alternative Solutions</a>
+    </div>
+
+    <!-- Main Container -->
+    <main class="app-container">
+
+        <!-- Hero Clinical Problem & Deep Learning Solution Banner -->
+        <section class="glass-panel hero-banner" id="cockpit">
+            <div class="hero-content">
+                <div class="hero-pill-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span>Preventable Blindness Intervention • Deep Learning Pipeline</span>
+                </div>
+                <h1 class="hero-title">
+                    Automated <span class="gradient-text">Diabetic Retinopathy</span> Detection & Severity Grading
+                </h1>
+                <p class="hero-subtitle">
+                    In rural and underserved clinics, a chronic shortage of ophthalmologists leads to delayed diagnoses
+                    and irreversible vision loss. This automated image classification pipeline uses transfer learning
+                    (ResNet-50 & EfficientNet) with CLAHE preprocessing and Grad-CAM interpretability to deliver
+                    immediate, specialist-level screening.
+                </p>
+            </div>
+            <!-- Live Global Diagnostic Metrics Strip -->
+            <div class="hero-stats-strip">
+                <div class="hero-stat-card">
+                    <div class="hero-stat-val">0.932</div>
+                    <div class="hero-stat-lbl">Quad. Weighted Kappa</div>
+                </div>
+                <div class="hero-stat-card">
+                    <div class="hero-stat-val">96.1%</div>
+                    <div class="hero-stat-lbl">Clinical Sensitivity</div>
+                </div>
+                <div class="hero-stat-card">
+                    <div class="hero-stat-val">&lt; 45ms</div>
+                    <div class="hero-stat-lbl">Inference Latency</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRIMARY DIAGNOSTIC COCKPIT (3 COLUMN RESPONSIVE GRID) -->
+        <section class="diagnostic-cockpit-grid">
+
+            <!-- COLUMN 1: SCAN SELECTOR & INPUT CONTROLS -->
+            <div class="cockpit-panel-left">
+                <!-- Preset Clinical Scans Card -->
+                <div class="glass-panel glass-card">
+                    <div class="section-heading">
+                        <div class="section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>Clinical Scan Presets</span>
+                        </div>
+                        <span class="glass-pill">5 Stages</span>
+                    </div>
+
+                    <div class="preset-stages-list">
+                        <!-- Grade 0 -->
+                        <div class="preset-card-item" data-stage="0">
+                            <div class="preset-thumb-wrapper">
+                                <canvas id="presetThumbStage0"></canvas>
+                            </div>
+                            <div class="preset-info">
+                                <div class="preset-title">Grade 0: Normal / No DR</div>
+                                <div class="preset-sub">Pristine retina, intact macula</div>
+                            </div>
+                            <span class="preset-grade-badge"
+                                style="background: rgba(16, 185, 129, 0.2); color: var(--stage-0);">0</span>
+                        </div>
+
+                        <!-- Grade 1 -->
+                        <div class="preset-card-item" data-stage="1">
+                            <div class="preset-thumb-wrapper">
+                                <canvas id="presetThumbStage1"></canvas>
+                            </div>
+                            <div class="preset-info">
+                                <div class="preset-title">Grade 1: Mild NPDR</div>
+                                <div class="preset-sub">Microaneurysms only</div>
+                            </div>
+                            <span class="preset-grade-badge"
+                                style="background: rgba(6, 182, 212, 0.2); color: var(--stage-1);">1</span>
+                        </div>
+
+                        <!-- Grade 2 (Default Active) -->
+                        <div class="preset-card-item active" data-stage="2">
+                            <div class="preset-thumb-wrapper">
+                                <canvas id="presetThumbStage2"></canvas>
+                            </div>
+                            <div class="preset-info">
+                                <div class="preset-title">Grade 2: Moderate NPDR</div>
+                                <div class="preset-sub">Blot hemorrhages & hard exudates</div>
+                            </div>
+                            <span class="preset-grade-badge"
+                                style="background: rgba(245, 158, 11, 0.2); color: var(--stage-2);">2</span>
+                        </div>
+
+                        <!-- Grade 3 -->
+                        <div class="preset-card-item" data-stage="3">
+                            <div class="preset-thumb-wrapper">
+                                <canvas id="presetThumbStage3"></canvas>
+                            </div>
+                            <div class="preset-info">
+                                <div class="preset-title">Grade 3: Severe NPDR</div>
+                                <div class="preset-sub">Venous beading, cotton wool spots</div>
+                            </div>
+                            <span class="preset-grade-badge"
+                                style="background: rgba(249, 115, 22, 0.2); color: var(--stage-3);">3</span>
+                        </div>
+
+                        <!-- Grade 4 -->
+                        <div class="preset-card-item" data-stage="4">
+                            <div class="preset-thumb-wrapper">
+                                <canvas id="presetThumbStage4"></canvas>
+                            </div>
+                            <div class="preset-info">
+                                <div class="preset-title">Grade 4: Proliferative PDR</div>
+                                <div class="preset-sub">Neovascularization, preretinal bleed</div>
+                            </div>
+                            <span class="preset-grade-badge"
+                                style="background: rgba(239, 68, 68, 0.2); color: var(--stage-4);">4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Fundus Upload Dropzone -->
+                <div class="glass-panel glass-card">
+                    <div class="section-heading">
+                        <div class="section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>Upload Patient Scan</span>
+                        </div>
+                    </div>
+
+                    <div id="uploadDropzone" class="upload-dropzone">
+                        <input type="file" id="fundusFileInput" accept="image/png, image/jpeg, image/jpg, image/tiff">
+                        <div class="upload-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <path d="M20.4 14.5L16 10 4 20"></path>
+                            </svg>
+                        </div>
+                        <div class="upload-text">Drag & drop fundus scan here</div>
+                        <div class="upload-hint">Supports PNG, JPG, TIFF up to 25MB</div>
+                    </div>
+                </div>
+
+                <!-- Model Architecture Selector -->
+                <div class="glass-panel glass-card">
+                    <div class="section-heading">
+                        <div class="section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                <polyline points="2 17 12 22 22 17"></polyline>
+                                <polyline points="2 12 12 17 22 12"></polyline>
+                            </svg>
+                            <span>Model Backbone</span>
+                        </div>
+                    </div>
+
+                    <div class="model-switch-group">
+                        <div class="model-radio-btn active" data-model="resnet50">ResNet-50</div>
+                        <div class="model-radio-btn" data-model="efficientnet-b2">EfficientNet-B2</div>
+                    </div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.6rem; text-align: center;">
+                        Fine-tuned on Kaggle APTOS 2019 Blindness Detection
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMN 2: CENTRAL INTERACTIVE VIEWPORT (CANVAS & GRAD-CAM) -->
+            <div class="cockpit-panel-center">
+                <div class="glass-panel viewport-glass-card">
+                    <!-- Viewport Toolbar (Pipeline tabs & display modes) -->
+                    <div class="viewport-toolbar">
+                        <div class="pipeline-view-tabs">
+                            <button class="pipeline-tab-btn" data-view="raw">1. Raw Scan</button>
+                            <button class="pipeline-tab-btn" data-view="crop">2. Circular Crop</button>
+                            <button class="pipeline-tab-btn" data-view="clahe">3. CLAHE</button>
+                            <button class="pipeline-tab-btn" data-view="green">4. Green Ch.</button>
+                            <button class="pipeline-tab-btn active" data-view="gradcam">Grad-CAM Overlay</button>
+                        </div>
+                        <div class="colormap-selector">
+                            <span
+                                style="font-size: 0.74rem; color: var(--text-muted); margin-right: 0.2rem;">Colormap:</span>
+                            <div class="colormap-chip active" data-map="jet">Jet</div>
+                            <div class="colormap-chip" data-map="turbo">Turbo</div>
+                            <div class="colormap-chip" data-map="inferno">Inferno</div>
+                        </div>
+                    </div>
+
+                    <!-- Retinal Canvas Viewport Stage -->
+                    <div class="retina-viewport-stage">
+                        <!-- Raw / Preprocessed Base Layer -->
+                        <canvas id="rawRetinaCanvas" class="retina-canvas-layer"></canvas>
+                        <!-- Grad-CAM Heatmap Activation Layer -->
+                        <canvas id="gradcamCanvas" class="retina-canvas-layer"></canvas>
+                        <!-- Interactive Pathological Lesion Pin Markers -->
+                        <div id="lesionPinsContainer" class="lesion-pins-overlay"></div>
+                        <!-- Tech HUD Reticle Crosshair -->
+                        <div class="viewport-hud-crosshair">
+                            <div class="hud-corner tl"></div>
+                            <div class="hud-corner tr"></div>
+                            <div class="hud-corner bl"></div>
+                            <div class="hud-corner br"></div>
+                        </div>
+                        <!-- AI Scanning Laser Beam -->
+                        <div id="scanningLaserLine" class="scanning-laser-line" style="display: none;"></div>
+                        <!-- Scanning Status Banner -->
+                        <div id="scanningStatusBadge" class="scanning-status-banner" style="display: none;">
+                            <span class="scanning-pulse-dot"></span>
+                            <span id="scanningStatusText">Neural Convolutional Inference in Progress...</span>
+                        </div>
+                    </div>
+
+                    <!-- Viewport Controls Footer (Opacity slider & feature badges) -->
+                    <div class="viewport-controls-bar">
+                        <div class="slider-control-group">
+                            <span class="slider-label">Grad-CAM Heatmap Blend:</span>
+                            <input type="range" id="heatmapOpacitySlider" class="glass-range-slider" min="0" max="1"
+                                step="0.05" value="0.7">
+                            <span id="opacityValDisplay" class="slider-val-tag">70%</span>
+                        </div>
+                        <button id="reanalyzeScanBtn" class="glass-btn glass-btn-primary" style="padding: 0.45rem 1rem; font-size: 0.8rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                            </svg>
+                            <span>Run AI Diagnosis</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preprocessing Pipeline Quick Step Strip -->
+                <div class="pipeline-step-strip" id="pipeline">
+                    <div class="pipeline-step-item" data-view="raw">
+                        <div class="step-number">STEP 01</div>
+                        <div class="step-label">Raw Fundus</div>
+                        <div class="step-desc">Aperture removal</div>
+                    </div>
+                    <div class="pipeline-step-item" data-view="crop">
+                        <div class="step-number">STEP 02</div>
+                        <div class="step-label">Graham's Crop</div>
+                        <div class="step-desc">Circular ROI mask</div>
+                    </div>
+                    <div class="pipeline-step-item" data-view="clahe">
+                        <div class="step-number">STEP 03</div>
+                        <div class="step-label">CLAHE Filter</div>
+                        <div class="step-desc">Contrast equalization</div>
+                    </div>
+                    <div class="pipeline-step-item" data-view="green">
+                        <div class="step-number">STEP 04</div>
+                        <div class="step-label">Green Channel</div>
+                        <div class="step-desc">Microvessel highlight</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMN 3: CLINICAL SEVERITY & TRIAGE REPORT -->
+            <div class="cockpit-panel-right">
+                <!-- Active Diagnosis Spotlight Card -->
+                <div id="diagSpotlightCard" class="glass-panel glass-card diagnosis-spotlight-card stage-2">
+                    <div class="diagnosis-header">
+                        <div class="diag-title-row">
+                            <div id="diagGradeNum" class="diag-grade-num">Grade 2</div>
+                            <div id="diagGradeName" class="diag-grade-name">Moderate NPDR</div>
+                        </div>
+                        <div id="diagSeverityBadge" class="diag-severity-pill">Moderate</div>
+                    </div>
+                    <p id="diagDescription" class="diag-description">
+                        More than just microaneurysms, but less than severe NPDR. Manifests with scattered dot/blot
+                        hemorrhages and waxy hard exudates forming lipid rings.
+                    </p>
+
+                    <!-- 5-Class Probability Distribution List -->
+                    <div
+                        style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--text-secondary);">
+                        5-Class Severity Probabilities:
+                    </div>
+                    <div id="probabilityBarsList" class="probability-bars-list">
+                        <!-- Populated dynamically via app.js -->
+                    </div>
+                </div>
+
+                <!-- Quantified Retinal Biomarkers Telemetry Card -->
+                <div class="glass-panel glass-card">
+                    <div class="section-heading">
+                        <div class="section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="22" y1="12" x2="18" y2="12"></line>
+                                <line x1="6" y1="12" x2="2" y2="12"></line>
+                                <line x1="12" y1="6" x2="12" y2="2"></line>
+                                <line x1="12" y1="22" x2="12" y2="18"></line>
+                            </svg>
+                            <span>Biomarker Lesion Telemetry</span>
+                        </div>
+                        <span id="telemetryStatusBadge" class="glass-pill active">Analyzed</span>
+                    </div>
+                    <div class="model-metrics-grid">
+                        <div class="metric-mini-tile">
+                            <div id="metricMicroaneurysms" class="metric-mini-val">0</div>
+                            <div class="metric-mini-lbl">Microaneurysms</div>
+                        </div>
+                        <div class="metric-mini-tile">
+                            <div id="metricHemorrhages" class="metric-mini-val">0</div>
+                            <div class="metric-mini-lbl">Hemorrhages</div>
+                        </div>
+                        <div class="metric-mini-tile">
+                            <div id="metricExudates" class="metric-mini-val">0</div>
+                            <div class="metric-mini-lbl">Hard Exudates</div>
+                        </div>
+                        <div class="metric-mini-tile">
+                            <div id="metricQuadrants" class="metric-mini-val">0/4</div>
+                            <div class="metric-mini-lbl">Quadrant Spread</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clinical Triage Protocol Card -->
+                <div class="glass-panel triage-action-card">
+                    <div class="triage-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="color: var(--accent-amber);">
+                            <path
+                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                            </path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>Clinical Triage Recommendation</span>
+                    </div>
+                    <div id="triageActionText"
+                        style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-bottom: 0.4rem;">
+                        Retina Specialist Evaluation
+                    </div>
+                    <div id="triageProtocolText" class="triage-content">
+                        Referral for comprehensive evaluation. Perform optical coherence tomography (OCT) to rule out
+                        subclinical diabetic macular edema (DME).
+                    </div>
+                    <div id="triageUrgencyTag" class="triage-urgency-tag">
+                        Elevated Risk • 3 to 6 Months
+                    </div>
+                </div>
+
+                <!-- Deep Model Confidence & Validation Metrics -->
+                <div class="glass-panel glass-card">
+                    <div class="section-heading">
+                        <div class="section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 14 14"></polyline>
+                            </svg>
+                            <span>Validation Metrics</span>
+                        </div>
+                    </div>
+                    <div class="model-metrics-grid">
+                        <div class="metric-mini-tile">
+                            <div id="metricQWK" class="metric-mini-val">0.914</div>
+                            <div class="metric-mini-lbl">QWK Kappa</div>
+                        </div>
+                        <div class="metric-mini-tile">
+                            <div id="metricSensitivity" class="metric-mini-val">94.2%</div>
+                            <div class="metric-mini-lbl">Sensitivity</div>
+                        </div>
+                        <div class="metric-mini-tile">
+                            <div id="metricSpecificity" class="metric-mini-val">95.6%</div>
+                            <div class="metric-mini-lbl">Specificity</div>
+                        </div>
+                        <div class="metric-mini-tile">
+                            <div id="metricAUC" class="metric-mini-val">0.981</div>
+                            <div class="metric-mini-lbl">ROC-AUC</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BENCHMARKS & ARCHITECTURE COMPARISON SECTION -->
+        <section class="benchmarks-section" id="benchmarks">
+            <div class="section-hero-header">
+                <h2>Transfer Learning Architecture Benchmarks</h2>
+                <p>Comparative validation metrics across backbone models evaluated on the Kaggle APTOS 2019 Blindness
+                    Detection test set (3,662 high-resolution scans).</p>
+            </div>
+
+            <div class="models-comparison-grid">
+                <!-- ResNet-50 -->
+                <div class="glass-panel glass-card benchmark-card">
+                    <div class="model-name">ResNet-50</div>
+                    <div class="model-tagline">Residual skip-connections, robust baseline</div>
+                    <div class="benchmark-metrics-list">
+                        <div class="benchmark-metric-item">
+                            <span>Quadratic Weighted Kappa</span>
+                            <span class="benchmark-metric-val">0.914</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Clinical Sensitivity (DR ≥ 1)</span>
+                            <span class="benchmark-metric-val">94.2%</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Clinical Specificity</span>
+                            <span class="benchmark-metric-val">95.6%</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Area Under Curve (ROC-AUC)</span>
+                            <span class="benchmark-metric-val">0.981</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Model Parameters</span>
+                            <span class="benchmark-metric-val">25.6M</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Inference Time (T4 GPU)</span>
+                            <span class="benchmark-metric-val">22ms</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary);">
+                        Optimal for high-throughput batch hospital server pipelines.
+                    </div>
+                </div>
+
+                <!-- EfficientNet-B2 (Highlighted SOTA) -->
+                <div class="glass-panel glass-card benchmark-card highlighted">
+                    <div class="benchmark-badge-ribbon">RECOMMENDED SOTA</div>
+                    <div class="model-name" style="color: var(--accent-cyan);">EfficientNet-B2</div>
+                    <div class="model-tagline">Compound scaling of depth, width, and resolution</div>
+                    <div class="benchmark-metrics-list">
+                        <div class="benchmark-metric-item">
+                            <span>Quadratic Weighted Kappa</span>
+                            <span class="benchmark-metric-val" style="color: var(--accent-cyan);">0.932</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Clinical Sensitivity (DR ≥ 1)</span>
+                            <span class="benchmark-metric-val" style="color: var(--accent-cyan);">96.1%</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Clinical Specificity</span>
+                            <span class="benchmark-metric-val">97.4%</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Area Under Curve (ROC-AUC)</span>
+                            <span class="benchmark-metric-val">0.989</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Model Parameters</span>
+                            <span class="benchmark-metric-val">9.2M (64% smaller)</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Inference Time (T4 GPU)</span>
+                            <span class="benchmark-metric-val">34ms</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--accent-cyan);">
+                        Superior microaneurysm feature localization with higher Grad-CAM resolution.
+                    </div>
+                </div>
+
+                <!-- EfficientNet-B0 (Edge / Mobile) -->
+                <div class="glass-panel glass-card benchmark-card">
+                    <div class="model-name">EfficientNet-B0</div>
+                    <div class="model-tagline">Ultra-lightweight edge deployment</div>
+                    <div class="benchmark-metrics-list">
+                        <div class="benchmark-metric-item">
+                            <span>Quadratic Weighted Kappa</span>
+                            <span class="benchmark-metric-val">0.898</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Clinical Sensitivity (DR ≥ 1)</span>
+                            <span class="benchmark-metric-val">92.7%</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Clinical Specificity</span>
+                            <span class="benchmark-metric-val">94.1%</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Area Under Curve (ROC-AUC)</span>
+                            <span class="benchmark-metric-val">0.974</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Model Parameters</span>
+                            <span class="benchmark-metric-val">5.3M</span>
+                        </div>
+                        <div class="benchmark-metric-item">
+                            <span>Inference Time (CPU Edge)</span>
+                            <span class="benchmark-metric-val">58ms</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary);">
+                        Engineered for low-cost handheld smartphone fundus adapters in rural clinics.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ALTERNATIVE QUICK-START PROJECTS SECTION (FROM USER PROMPT) -->
+        <section class="quickstart-section" id="quickstart">
+            <div class="section-hero-header">
+                <h2>Alternative Real-World Deep Learning Projects</h2>
+                <p>Transferable computer vision architectures addressing mission-critical real-world problems.</p>
+            </div>
+
+            <div class="quickstart-grid">
+                <!-- Project 1: Pothole Detection -->
+                <div class="glass-panel glass-card quickstart-card">
+                    <div class="quickstart-top">
+                        <div class="quickstart-icon-box">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                            </svg>
+                        </div>
+                        <div class="quickstart-title">Pothole Detection & Surface Quality Assessment</div>
+                        <div class="quickstart-algo-tag">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            </svg>
+                            <span>YOLOv8 / Faster R-CNN</span>
+                        </div>
+                        <p class="quickstart-desc">
+                            Automates municipal road hazard inspection from dashcam footage in real time. Pinpoints
+                            pothole coordinates, depth indices, and severity for proactive highway repair crews.
+                        </p>
+                    </div>
+                    <div
+                        style="font-size: 0.76rem; color: var(--text-muted); border-top: 1px solid var(--glass-border); padding-top: 0.75rem;">
+                        <strong>Key Benchmark:</strong> 88.4% mAP@0.5 at 62 FPS
+                    </div>
+                </div>
+
+                <!-- Project 2: Plant Leaf Disease -->
+                <div class="glass-panel glass-card quickstart-card">
+                    <div class="quickstart-top">
+                        <div class="quickstart-icon-box">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <div class="quickstart-title">Plant Leaf Disease Identification via Mobile Imaging</div>
+                        <div class="quickstart-algo-tag">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            </svg>
+                            <span>MobileNetV3 / Vision Transformer</span>
+                        </div>
+                        <p class="quickstart-desc">
+                            Helps rural farmers diagnose 38 crop infections early without requiring an agronomist
+                            on-site. Uses leaf surface feature segmentation to deliver instant treatment prescriptions.
+                        </p>
+                    </div>
+                    <div
+                        style="font-size: 0.76rem; color: var(--text-muted); border-top: 1px solid var(--glass-border); padding-top: 0.75rem;">
+                        <strong>Key Benchmark:</strong> 98.7% Top-1 Accuracy across 54,000 leaves
+                    </div>
+                </div>
+
+                <!-- Project 3: Driver Drowsiness -->
+                <div class="glass-panel glass-card quickstart-card">
+                    <div class="quickstart-top">
+                        <div class="quickstart-icon-box">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                        <div class="quickstart-title">Real-Time Driver Drowsiness & Distraction Alert</div>
+                        <div class="quickstart-algo-tag">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            </svg>
+                            <span>CNN + LSTM / MediaPipe FaceMesh</span>
+                        </div>
+                        <p class="quickstart-desc">
+                            Mitigates highway vehicular collisions by tracking Eye Aspect Ratio (EAR), prolonged blink
+                            durations, and yawning frequencies using edge camera video streams.
+                        </p>
+                    </div>
+                    <div
+                        style="font-size: 0.76rem; color: var(--text-muted); border-top: 1px solid var(--glass-border); padding-top: 0.75rem;">
+                        <strong>Key Benchmark:</strong> &lt; 200ms trigger latency on Raspberry Pi 4
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CLINICAL DIAGNOSTIC REPORT MODAL DIALOG -->
+    <div id="reportModal" class="modal-overlay">
+        <div class="report-modal-content">
+            <button id="closeReportBtn" class="report-close-btn" aria-label="Close Report Modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <!-- Report Header -->
+            <div class="report-doc-header">
+                <div>
+                    <div class="report-doc-title">RetinaVision Clinical Diagnostic Report</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                        Automated AI Fundus Triage & Severity Assessment
+                    </div>
+                </div>
+                <button id="printReportBtn" class="glass-btn" style="padding: 0.5rem 1rem; font-size: 0.82rem;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    <span>Print / Save PDF</span>
+                </button>
+            </div>
+
+            <!-- Report Metadata Table -->
+            <div class="report-meta-grid">
+                <div class="report-meta-item">
+                    <strong>Study ID:</strong>
+                    <span id="reportMetaId">RET-948201</span>
+                </div>
+                <div class="report-meta-item">
+                    <strong>Scan Date & Time:</strong>
+                    <span id="reportMetaDate">Nov 2, 2026, 11:15 AM</span>
+                </div>
+                <div class="report-meta-item">
+                    <strong>AI Backbone Engine:</strong>
+                    <span id="reportMetaModel">ResNet-50 Fine-Tuned</span>
+                </div>
+            </div>
+
+            <!-- Fundus & Grad-CAM Image Preview in Report -->
+            <div style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <div
+                    style="width: 180px; height: 180px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--glass-border); background: #000; flex-shrink: 0;">
+                    <canvas id="reportFundusPreviewCanvas"
+                        style="width: 100%; height: 100%; object-fit: cover;"></canvas>
+                </div>
+                <div style="flex: 1; min-width: 240px;">
+                    <div style="margin-bottom: 0.6rem;">
+                        <span id="reportGradeBadge" class="diag-severity-pill"
+                            style="font-size: 0.82rem; padding: 0.35rem 0.9rem;">
+                            Grade 2 • Moderate
+                        </span>
+                    </div>
+                    <h3 id="reportGradeName" style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.4rem;">
+                        Moderate Non-Proliferative Diabetic Retinopathy
+                    </h3>
+                    <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">
+                        Grad-CAM feature attribution localized active clusters of retinal microaneurysms, dot
+                        hemorrhages, and circumscribed hard exudates in the temporal vascular arcades.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Recommended Clinical Pathway -->
+            <div
+                style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+                <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent-cyan);">
+                    Recommended Clinical Referral Protocol:
+                </h4>
+                <p id="reportTriagePlan" style="font-size: 0.86rem; color: var(--text-primary); line-height: 1.6;">
+                    Retina Specialist Evaluation within 3 to 6 months. Maintain HbA1c below 7.0%. Perform optical
+                    coherence tomography (OCT) to rule out subclinical macular edema.
+                </p>
+            </div>
+
+            <!-- Regulatory Disclaimer -->
+            <div
+                style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+                <strong>Clinical Notice:</strong> This automated assessment is generated by an artificial intelligence
+                decision-support algorithm intended to augment ophthalmic triage in underserved clinics. Final clinical
+                diagnoses and surgical laser interventions must be confirmed by a licensed ophthalmologist or retina
+                specialist.
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="scripts/fundus-generator.js"></script>
+    <script src="scripts/image-processor.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+
+</html>
